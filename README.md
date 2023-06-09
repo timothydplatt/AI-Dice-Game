@@ -19,24 +19,14 @@ The game can be represented as a Makov Decision Process as it has the following 
 - Transition probabilities P(s<sup>1</sup> | s, a) which are the probability that an action (a) in state (𝑠) at time (t) will lead to state s<sup>1</sup> at time t+1.
 - A reward function R(s) which is the reward after transitioning from one state (𝑠) to another (s<sup>1</sup>), which is -1 for a 'reroll' action or the value of the dice for a 'stick' action.
 
-
-
-
-
-
-
-- A discount factor (𝛾)
-
-
-
-
-
-
-
 ## Approach
 As suggested in the assignment I decided to implement the value iteration algorithm to produce a dice game strategy for the agent and performed parameter optimisation to predetermine the best parameters to use to maximise the score achieved by the agent. 
 
+I first started out by playing the game several times and printing out different properties and function output to understand how actions, states, rewards and probabilities etc were all represented. Additionally, I also studied the code that was already in place to familiarise myself before diving into building a solution - it was a worthwhile endeavour and I noticed little quirks which may have confused me otherwise e.g. the states of the game are always sorted in ascending order. 
+
 ### Value Iteration
+After selections some sensible default values for my discount_factor (𝛾) and theta (θ) I immediately jumped into trying to translate the value iteration function psuedo code from our course material and the modules recommended reading. 
+
 
 ```
 XXX
@@ -80,3 +70,5 @@ N = (log(2Rmax/(1 − γ))/ log(1/γ))iterations suffice. Figure 17.5(b) shows h
 depend much on the ratio /Rmax. The bad news is that N grows rapidly as γ becomes close
 to 1. We can get fast convergence if we make γ small, but this effectively gives the agent a
 short horizon and could miss the long-term effects of the agent’s actions.
+
+- A discount factor (𝛾)
