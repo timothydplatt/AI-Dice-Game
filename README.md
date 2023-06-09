@@ -27,13 +27,53 @@ I first started out by playing the game several times and printing out different
 ### Value Iteration
 After selections some sensible default values for my discount_factor (𝛾) and theta (θ) I immediately jumped into trying to translate the value iteration function psuedo code from our course material and the modules recommended reading. The value iteration algorithm presented in the course material looks as follows:
 
+![Model](https://github.com/timothydplatt/AI-Dice-Game/blob/main/Lecture.png)
 
+There are numerous ways this code could be implemented. Artificial Intelligence: A Modern Approach is quite succict but not particularly readable in my personal opinion - it's also the only example that uses epsilon versus theta to represent a small value to determine if the algorithm has converged, which is the greek symbol I've traditionally understood to represent a small arbitrary value. 
+
+Some techniques break the value iteration algorithm down into multiple functions - usually having a "one-step look-ahead" function or Bellman update function to separate out this quite complex calculation. Typically, I'd find this a more intuitive approach than having several nested for loops all within a single function but in the case of value iteration I find keeping the code all in one function more readable and easier to understand what's happening. Equally, the results of the operation are stored in all manner of ways....
+
+My implementation of the value iteration function can is shown below:
+
+```
+def value_iteration(self):
+        V = {state: [None, 0] for state in game.states}
+        
+        while True:
+            delta = 0
+            for state in game.states:
+                current_state_value = V[state][1]
+                best_action_value = 0
+
+                for action in game.actions:
+                    expected_return = 0                 
+                    next_states, game_over, reward, probabilities = game.get_next_states(action, state)
+                    state_probability_iterable = zip(next_states, probabilities)
+                    
+                    for next_state, probability in state_probability_iterable:
+                        if not game_over:
+                            expected_return += probability * (reward + self.discount_factor * V[next_state][1])
+                        else:
+                            expected_return += probability * reward
+
+                    if expected_return > best_action_value:
+                        best_action_value = expected_return
+                        V[state] = [action, best_action_value]
+                
+                delta = max(delta, abs(current_state_value - best_action_value))
+                
+            if delta < self.theta:
+                break
+    
+        return V
+```
+
+The variable V is a dictionary where the key is the different states of the game and...
 
 * Could use q table...
+* Save scores and actions in different diaries.
+* Implementing the Bellman equation.
 
-```
-XXX
-```
 - Understanding/interpreting the Bellman update.
 - Deciding how to handle is game over. 
 - Nested loops vs. breaking the function out into separate functions (AIMA much more complex, felt like happy medium)
@@ -57,8 +97,12 @@ XXX
 - What other approaches could I have taken?
 
 ## References
+https://github.com/aimacode/aima-python/blob/master/mdp.py
 
-The Markov reward process (MRP) is defined by (S, P, R, γ), 
+
+
+ So, we’re able to use a one-step look-ahead approach and compute rewards for all possible actions.
+
 
 A text file that explains your approach and the decisions you made in your own words – a readme file
 Submissions that do not include the written section will receive zero marks – this part is mandatory
