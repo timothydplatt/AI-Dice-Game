@@ -25,8 +25,11 @@ As suggested in the assignment I decided to implement the value iteration algori
 I first started out by playing the game several times and printing out different properties and function output to understand how actions, states, rewards and probabilities etc were all represented. Additionally, I also studied the code that was already in place to familiarise myself before diving into building a solution - it was a worthwhile endeavour and I noticed little quirks which may have confused me otherwise e.g. the states of the game are always sorted in ascending order. 
 
 ### Value Iteration
-After selections some sensible default values for my discount_factor (𝛾) and theta (θ) I immediately jumped into trying to translate the value iteration function psuedo code from our course material and the modules recommended reading. 
+After selections some sensible default values for my discount_factor (𝛾) and theta (θ) I immediately jumped into trying to translate the value iteration function psuedo code from our course material and the modules recommended reading. The value iteration algorithm presented in the course material looks as follows:
 
+
+
+* Could use q table...
 
 ```
 XXX
