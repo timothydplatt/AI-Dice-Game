@@ -27,15 +27,15 @@ I first started out by playing the game several times and printing out different
 ### Value Iteration
 After selections some sensible default values for my discount_factor (𝛾) and theta (θ) I immediately jumped into trying to translate the value iteration function psuedo code from our course material and the modules recommended reading. The value iteration algorithm presented in the course material looks as follows:
 
-![Model](https://github.com/timothydplatt/AI-Dice-Game/blob/main/Lecture.png)
+![Model](https://github.com/timothydplatt/AI-Dice-Game/blob/main/Lecture.png) | width=100
 
 There are numerous ways this code could be implemented. Artificial Intelligence: A Modern Approach is quite succict but not particularly readable in my personal opinion - it's also the only example that uses epsilon versus theta to represent a small value to determine if the algorithm has converged, which is the greek symbol I've traditionally understood to represent a small arbitrary value. 
 
-Some techniques break the value iteration algorithm down into multiple functions - usually having a "one-step look-ahead" function or Bellman update function to separate out this quite complex calculation. Typically, I'd find this a more intuitive approach than having several nested for loops all within a single function but in the case of value iteration I find keeping the code all in one function more readable and easier to understand what's happening. Equally, the results of the operation are stored in all manner of ways....
+Some techniques break the value iteration algorithm down into multiple functions - usually having a "one-step look-ahead" function, which performs the Bellman update, to separate out this quite complex calculation. Typically, I'd find this a more intuitive approach than having several nested for loops all within a single function but in the case of value iteration I find keeping the code all in one function more readable and easier to understand what's happening. Equally, the results of the operation are stored in all manner of ways, with some examples storing the the state/values in one dictionary and one state/policy in another dictionary. 
 
 My implementation of the value iteration function can is shown below:
 
-```
+``` python
 def value_iteration(self):
         V = {state: [None, 0] for state in game.states}
         
@@ -68,9 +68,21 @@ def value_iteration(self):
         return V
 ```
 
-The variable V is a dictionary where the key is the different states of the game and...
+The variable V is a dictionary where the key is the different states of the game and the value is a list containing an action in index 0 and the expected value of perorming that action for a given state in index 1. I chose the vaue to be a list as opposed to a tuple because I was expected to be updating the values of the action/value for each state at different times and this wouldn't be possible (or simple) given tuples are immutable. In the end I went on to update the values of the dictionary at the same time so a tuple would have perhaps been a good idea given they're slightly more performant than a list. Q tables can also beused but it didn't feel necessary to use a data collection outside of the standard Python language.
 
-* Could use q table...
+The most challenging part of the value function was writing the Bellman update:
+
+``` python
+for next_state, probability in state_probability_iterable:
+  if not game_over:
+      expected_return += probability * (reward + self.discount_factor * V[next_state][1])
+  else:
+      expected_return += probability * reward
+```
+
+Firstly, it's a complex function to translate from mathematical notation to code - it's important to get the operands and order of operations correct - I managed to create both an infinite loop and a poor scoring agent by getting these wrong and it took some trial and error. Equally, I initially failed to handle when game_over = true which caused issues as there was no 'next-state'.
+
+
 * Save scores and actions in different diaries.
 * Implementing the Bellman equation.
 
@@ -80,9 +92,50 @@ The variable V is a dictionary where the key is the different states of the game
 
 ### Parameter Optimisation
 
+``` python
+def parameter_optimisation():
+    game_scores = []
+    game_times = []
+    possible_theta_values = []
+    possible_discount_factor_values = []
+    all_combinations_of_discount_factor_and_theta = []
+    
+    for i in range(-10, 0):
+        possible_theta_values.append(10**i)
+    possible_theta_values.reverse()
+
+    possible_discount_factor_values = np.arange(0.9, 1.01, 0.01)
+    
+    for i in possible_discount_factor_values:
+        for j in possible_theta_values:
+            all_combinations_of_discount_factor_and_theta.append((i, j))
+    
+    for combination in all_combinations_of_discount_factor_and_theta:
+        total_score = 0
+        total_time = 0
+        n = 1
+
+        np.random.seed()
+        game = DiceGame()
+
+        start_time = time.process_time()
+        print(round(combination[0], 2))
+        print(combination[1])
+        test_agent = MyAgent(game, discount_factor=combination[0], theta=combination[1]) #TODO - pass in the values of gamma and theta
+        total_time += time.process_time() - start_time
+
+        for ni in range(n):
+            start_time = time.process_time()
+            score = play_game_with_agent(test_agent, game)
+            total_time += time.process_time() - start_time
+            total_score += score
+
+        game_scores.append(total_score/n)
+        game_times.append(total_time)
+
+    for combination, comb_score, comb_time in zip(all_combinations_of_discount_factor_and_theta, game_scores, game_times):
 ```
-XXX
-```
+
 - Tested discount rates of 0.9 and upwards.
 - Tested theta values of 0.1 and below.
 - Ran game 50,000 times for each combination of those to parameters.
