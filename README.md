@@ -160,6 +160,8 @@ def parameter_optimisation():
 ```
 
 ## Results
+0.00042089 seconds
+13.3283 score
 
 ## Reflections
 It would have been ideal if I could have implemented a policy iteration solution in addition to value iteration to ascertain that I have indeed indentified the optimal action for every given state. In terms of improvement to the score achieved by the agent, implemented policy iteration may have result in an even higher score or atleast have validated I'd achieved the best possible set of actions and thus scores possible for the agent.
