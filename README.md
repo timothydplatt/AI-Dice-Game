@@ -82,19 +82,33 @@ for next_state, probability in state_probability_iterable:
       expected_return += probability * reward
 ```
 
-Firstly, it's a complex function to translate from mathematical notation to code - it's important to get the operands and order of operations correct - I managed to create both an infinite loop and a poor scoring agent by getting these wrong and it took some trial and error. Equally, I initially failed to handle when game_over = true which caused issues as there was no 'next-state'.
+Firstly, it's a complex function to translate from mathematical notation to code - it's important to get the operands and order of operations correct - I managed to create both an infinite loop and a poor scoring agent by getting these wrong and it took some trial and error. Equally, I initially failed to handle when game_over = true which caused issues as there was no 'next-state'. The Bellman update calculates an expected return for an action, given a state, by iterating over all of the possible next states for a given state/action, summing up the probability of taking that action by the the product of the reward for taking the action by the discounted expected return of taking that action. Or simply put, the Bellman update provides the expected return of taking each action from a state which allows us to determine the optimal action for a given state. 
 
-XXX
+In terms of how the code works - for each state (𝑠) and for each action (a) we calculate an expected return using the Bellman update; as described above. We update our V dictionary wiuth the optimal action and expected value for performing that action for every state. We then repeat this process until the difference (i.e. delta Δ) between the values for each state in V no longer change or they change by such a small amount that they are less than the value of theta (θ) i.e. the convergence threshold. This is described as V having 'converged' and the result is that V should contain the optimal (or good enough) action and value for every state. 
 
+This means, when an agent is given a state, they can use the action stored in V to perform the optimal action. Which allows us to keep our play() function extremely simple:
 
-* Save scores and actions in different diaries.
-* Implementing the Bellman equation.
-
-- Understanding/interpreting the Bellman update.
-- Deciding how to handle is game over. 
-- Nested loops vs. breaking the function out into separate functions (AIMA much more complex, felt like happy medium)
+``` python
+def play(self, state):
+  return self.V[state][0]
+```
 
 ### Parameter Optimisation
+There are two parameters that needed to be predetermined - the discount_factor (𝛾) and theta (θ).
+
+Typically a value between 0.9 and 1 is used as the discount factor. A discount factor of 1 means that rewards in the future are valued just as much as immediate rewards but the higher the discount the more iterations that will be performed before V converges, which means longer processing hence why we measure the time in the parameter_optimisation() function below. Intuitively, even before parameter optimisation, it's reasonable to think that a high value for the discount factor would make sense given each action carries a reward of -1 we need to value future rewards as much as immediate rewards, which is why I initially chose a value of 1 (and in fact, went on to stick with).
+
+Theta (θ) represents a small number which is used to check for convergence in the value_iteration() function - I initially started with 0.1 as it felt like a negligible difference for a dice game and a sensible starting point when testing out my code as I didn't want it to iterate for a long time each time I ran my Jupyter cells while I was still developing my solution.
+
+In the parameter_optimisation() function I created a list of discount factor/theta tuples combindations e.g. (0.9, 0.1), (0.9, 0.01) ... (1,1e-10) and then ran the game 50,000 times for each combination of those two parameters. I found that discount factor has a strong positive correlation with increased score (see graph below) but that theta values didn't materially impact the scores. 
+
+
+Also, I found that lower theta values had a bigger impact on the time taken for the value iteration function to converge than higher discount factor values (see graph below):
+
+
+
+Thus, the default values for discount factor and theta are 1 and 0.1 respectively. 
+
 
 ``` python
 def parameter_optimisation():
@@ -125,7 +139,7 @@ def parameter_optimisation():
         start_time = time.process_time()
         print(round(combination[0], 2))
         print(combination[1])
-        test_agent = MyAgent(game, discount_factor=combination[0], theta=combination[1]) #TODO - pass in the values of gamma and theta
+        test_agent = MyAgent(game, discount_factor=combination[0], theta=combination[1])
         total_time += time.process_time() - start_time
 
         for ni in range(n):
@@ -139,13 +153,6 @@ def parameter_optimisation():
 
     for combination, comb_score, comb_time in zip(all_combinations_of_discount_factor_and_theta, game_scores, game_times):
 ```
-
-- Tested discount rates of 0.9 and upwards.
-- Tested theta values of 0.1 and below.
-- Ran game 50,000 times for each combination of those to parameters.
-- Discount rate has a strong positive correlation with increased score.
-- Theta values didn't have any material impact on scores.
-- A higher discount rate means more iterations, which means a longer processing, so measuring time was an important factor. 
 
 ## Results
 
