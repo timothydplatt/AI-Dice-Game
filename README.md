@@ -1,14 +1,14 @@
 # Assignment 2 - Dice Game Agent
 
 ## Context
-The challenge was to implement an agent that is able to achieve a high score playing a dice game. The dice game works as follows:
+The challenge was to implement an agent able to achieve an optimal score when playing a dice game. The dice game works as follows:
 
 - The agent starts with 0 points.
 - Three fair six-sided dice are rolled to provide a score i.e. 2 + 4 + 6 = 12. 
 - If two or more die show the same values e.g. 1 + 1 + 4 then all matching value die are flipped upside down to become 6 + 6 + 4 = 16.
-- After the initial dice roll the agent playing has two options:
+- After the initial dice roll the agent has two options:
   - Stick and accept the values presented by holding all 3 die.
-  - Reroll any combination of the dice i.e. holding none, one or two of the die. 
+  - Reroll any combination of the die i.e. holding none, one or two of the die. 
 - Rerolling dice costs the agent 1 point, which means negative scores are possible. 
 
 The game can be represented as a Makov Decision Process as it has the following components:
@@ -20,20 +20,22 @@ The game can be represented as a Makov Decision Process as it has the following 
 - A reward function R(s) which is the reward after transitioning from one state (𝑠) to another (s<sup>1</sup>), which is -1 for a 'reroll' action or the value of the dice for a 'stick' action.
 
 ## Approach
-As suggested in the assignment I decided to implement the value iteration algorithm to produce a dice game strategy for the agent and performed parameter optimisation to predetermine the best parameters to use to maximise the score achieved by the agent. 
+As suggested in the assignment I decided to implement the value iteration algorithm to produce a dice game strategy for the agent and performed parameter optimisation to predetermine the best parameters to use to maximise the score achieved by the agent while ensuring the agents performance remained efficient. 
 
-I first started out by playing the game several times and printing out different properties and function output to understand how actions, states, rewards and probabilities etc were all represented. Additionally, I also studied the code that was already in place to familiarise myself before diving into building a solution - it was a worthwhile endeavour and I noticed little quirks which may have confused me otherwise e.g. the states of the game are always sorted in ascending order. 
+I first started out by playing the game several times and printing out different properties and output of the various functions to understand how actions, states, rewards and probabilities etc were represented. Additionally, I studied the code that was already in place to familiarise myself before diving into coding a solution - it was a worthwhile endeavour and I noticed several little quirks which may have confused me had I not studied the code first e.g. the states of the game are always sorted in ascending order. 
 
 ### Value Iteration
-After selections some sensible default values for my discount_factor (𝛾) and theta (θ) I immediately jumped into trying to translate the value iteration function psuedo code from our course material and the modules recommended reading. The value iteration algorithm presented in the course material looks as follows:
+After selecting some sensible default values for my discount_factor (𝛾) and theta (θ)* I immediately moved on to trying to translate the value iteration algorithm psuedo code from our course material** and the modules recommended reading into actual code (Russell et al., 2010). The value iteration algorithm presented in the course material is as follows:
 
-![Model](https://github.com/timothydplatt/AI-Dice-Game/blob/main/Lecture.png) | width=100
+<p align="center">
+  <img src="https://github.com/timothydplatt/AI-Dice-Game/blob/main/Lecture.png" width=50% height=50%>
+</p>
 
-There are numerous ways this code could be implemented. Artificial Intelligence: A Modern Approach is quite succict but not particularly readable in my personal opinion - it's also the only example that uses epsilon versus theta to represent a small value to determine if the algorithm has converged, which is the greek symbol I've traditionally understood to represent a small arbitrary value. 
+There are numerous ways this code could be implemented. Artificial Intelligence: A Modern Approach*** is quite succict but not particularly readable in my opinion - it's also the only example that uses epsilon versus theta to represent a small value to determine if the algorithm has converged, which is the greek symbol I've traditionally understood to represent a small arbitrary value so it was interesting to see all other texts use theta to represent a small arbitrary value. 
 
-Some techniques break the value iteration algorithm down into multiple functions - usually having a "one-step look-ahead" function, which performs the Bellman update, to separate out this quite complex calculation. Typically, I'd find this a more intuitive approach than having several nested for loops all within a single function but in the case of value iteration I find keeping the code all in one function more readable and easier to understand what's happening. Equally, the results of the operation are stored in all manner of ways, with some examples storing the the state/values in one dictionary and one state/policy in another dictionary. 
+Some techniques break the value iteration algorithm down into multiple functions**** - usually having a sepearate "one-step look-ahead" function, which performs the Bellman update, to break out this quite complex calculation into discrete operations. Typically, I'd find this a more intuitive approach than having several nested loops all within a single function but in the case of value iteration I find keeping the code all in one function more readable and easier to understand what's happening. Equally, the results of the operation are stored in all manner of ways, with some examples storing the the state/values in one dictionary and one state/policy in another dictionary or using Q tables to represent states and rewards in a tabular format*****. 
 
-My implementation of the value iteration function can is shown below:
+My implementation of the value iteration function, with comments removed, is shown below:
 
 ``` python
 def value_iteration(self):
@@ -68,7 +70,7 @@ def value_iteration(self):
         return V
 ```
 
-The variable V is a dictionary where the key is the different states of the game and the value is a list containing an action in index 0 and the expected value of perorming that action for a given state in index 1. I chose the vaue to be a list as opposed to a tuple because I was expected to be updating the values of the action/value for each state at different times and this wouldn't be possible (or simple) given tuples are immutable. In the end I went on to update the values of the dictionary at the same time so a tuple would have perhaps been a good idea given they're slightly more performant than a list. Q tables can also beused but it didn't feel necessary to use a data collection outside of the standard Python language.
+The variable V is a dictionary where the key is the different states of the game and the value is a list containing an action in index 0 and the expected value of perorming that action for a given state in index 1. I chose the value of the dictionary to be a list as opposed to a tuple because I was expected to be updating the values of the action/value for each state at different times and this wouldn't be possible (or simple) given tuples are immutable. In the end I went on to update the values of the dictionary at the same time so a tuple would have perhaps been a good idea given they're slightly more performant than a list. As mentioned, Q tables can also be used but it didn't feel necessary to import a data collection outside of the standard Python language.
 
 The most challenging part of the value function was writing the Bellman update:
 
@@ -81,6 +83,8 @@ for next_state, probability in state_probability_iterable:
 ```
 
 Firstly, it's a complex function to translate from mathematical notation to code - it's important to get the operands and order of operations correct - I managed to create both an infinite loop and a poor scoring agent by getting these wrong and it took some trial and error. Equally, I initially failed to handle when game_over = true which caused issues as there was no 'next-state'.
+
+XXX
 
 
 * Save scores and actions in different diaries.
@@ -150,12 +154,21 @@ def parameter_optimisation():
 - What other approaches could I have taken?
 
 ## References
-https://github.com/aimacode/aima-python/blob/master/mdp.py
 
+Russell, S.J. and Norvig, P. (2010). Artificial intelligence : a modern approach. Upper Saddle River: Prentice-Hall.
+
+* https://engage.bath.ac.uk/learn/mod/forum/discuss.php?d=72269#p159024
+‌** https://engage.bath.ac.uk/learn/mod/page/view.php?id=190322
+*** https://github.com/aimacode/aima-python/blob/master/mdp.py
+**** https://www.baeldung.com/cs/ml-value-iteration-vs-policy-iteration 
+***** https://gibberblot.github.io/rl-notes/single-agent/value-iteration.html
+
+
+
+XXXXXXXXXX
 
 
  So, we’re able to use a one-step look-ahead approach and compute rewards for all possible actions.
-
 
 A text file that explains your approach and the decisions you made in your own words – a readme file
 Submissions that do not include the written section will receive zero marks – this part is mandatory
