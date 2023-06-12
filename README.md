@@ -102,10 +102,15 @@ Theta (θ) represents a small number which is used to check for convergence in t
 
 In the parameter_optimisation() function I created a list of discount factor/theta tuples combindations e.g. (0.9, 0.1), (0.9, 0.01) ... (1,1e-10) and then ran the game 50,000 times for each combination of those two parameters. I found that discount factor has a strong positive correlation with increased score (see graph below) but that theta values didn't materially impact the scores. 
 
+<p align="center">
+  <img src="https://github.com/timothydplatt/AI-Dice-Game/blob/main/Graph 1.png" width=50% height=50%>
+</p>
 
 Also, I found that lower theta values had a bigger impact on the time taken for the value iteration function to converge than higher discount factor values (see graph below):
 
-
+<p align="center">
+  <img src="https://github.com/timothydplatt/AI-Dice-Game/blob/main/Graph 2.png" width=50% height=50%>
+</p>
 
 Thus, the default values for discount factor and theta are 1 and 0.1 respectively. 
 
@@ -157,8 +162,11 @@ def parameter_optimisation():
 ## Results
 
 ## Reflections
-- What could be done to improve the solution?
-- What other approaches could I have taken?
+It would have been ideal if I could have implemented a policy iteration solution in addition to value iteration to ascertain that I have indeed indentified the optimal action for every given state. In terms of improvement to the score achieved by the agent, implemented policy iteration may have result in an even higher score or atleast have validated I'd achieved the best possible set of actions and thus scores possible for the agent.
+
+Additionally, I'm aware that here are several Python libraries and third party tools for parameter optimisation. My approach is relatively crude but is suffice. 
+
+Finally, in terms of performance there are several things I could have perhaps done to speed things up, such as caching actions for given states or next states for given state/actions, but optimising for code performance wasn't my primary focus.
 
 ## References
 
@@ -169,26 +177,3 @@ Russell, S.J. and Norvig, P. (2010). Artificial intelligence : a modern approach
 *** https://github.com/aimacode/aima-python/blob/master/mdp.py
 **** https://www.baeldung.com/cs/ml-value-iteration-vs-policy-iteration 
 ***** https://gibberblot.github.io/rl-notes/single-agent/value-iteration.html
-
-
-
-XXXXXXXXXX
-
-
- So, we’re able to use a one-step look-ahead approach and compute rewards for all possible actions.
-
-A text file that explains your approach and the decisions you made in your own words – a readme file
-Submissions that do not include the written section will receive zero marks – this part is mandatory
-You may write your file in plain text (.txt) or Markdown (.md)
-To get top marks on this assignment, as well as getting a high grade from your implementation, you must also demonstrate excellent academic presentation in your written section
-
- This means that the maximum initial error ||U0 − U|| ≤ 2Rmax/(1 − γ).
-Suppose we run for N iterations to reach an error of at most . Then, because the error is
-reduced by at least γ each time, we require γN · 2Rmax/(1 − γ) ≤ . Taking logs, we find
-N = (log(2Rmax/(1 − γ))/ log(1/γ))iterations suffice. Figure 17.5(b) shows how N varies with γ, for different values of the ratio
-/Rmax. The good news is that, because of the exponentially fast convergence, N does not
-depend much on the ratio /Rmax. The bad news is that N grows rapidly as γ becomes close
-to 1. We can get fast convergence if we make γ small, but this effectively gives the agent a
-short horizon and could miss the long-term effects of the agent’s actions.
-
-- A discount factor (𝛾)
