@@ -160,8 +160,7 @@ def parameter_optimisation():
 ```
 
 ## Results
-0.00042089 seconds
-13.3283 score
+The dice game agent, with a discount factor of 1 and theta value of 0.1, when playing 50,000 games, achieved an average score of 13.33 and was able to complete a game in an average time of 0.0004 seconds. 
 
 ## Reflections
 It would have been ideal if I could have implemented a policy iteration solution in addition to value iteration to ascertain that I have indeed indentified the optimal action for every given state. In terms of improvement to the score achieved by the agent, implemented policy iteration may have result in an even higher score or atleast have validated I'd achieved the best possible set of actions and thus scores possible for the agent.
