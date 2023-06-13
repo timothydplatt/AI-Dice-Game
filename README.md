@@ -70,7 +70,7 @@ def value_iteration(self):
         return V
 ```
 
-The variable `V` is a dictionary where the key is the different states of the game and the value is a list containing an action in index 0 and the expected value of perorming that action for a given state in index 1. I chose the value of the dictionary to be a list as opposed to a tuple because I was expected to be updating the values of the action/value for each state at different times and this wouldn't be possible (or simple) given tuples are immutable. In the end I went on to update the values of the dictionary at the same time so a tuple would have perhaps been a good idea given they're slightly more performant than a list. As mentioned, Q tables can also be used but it didn't feel necessary to import a data collection outside of the standard Python language.
+The variable `V` is a dictionary where the key is the different states of the game and the value is a list containing an action in index 0 and the expected value of performing that action for a given state in index 1. I chose the value of the dictionary to be a list as opposed to a tuple because I was expected to be updating the values of the action/value for each state at different times and this wouldn't be possible (or simple) given tuples are immutable. In the end I went on to update the values of the dictionary at the same time so a tuple would have perhaps been a good idea given they're slightly more performant than a list. As mentioned, Q tables can also be used but it didn't feel necessary to import a data collection outside of the standard Python language.
 
 The most challenging part of the value function was writing the Bellman update:
 
