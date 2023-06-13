@@ -25,7 +25,7 @@ As suggested in the assignment I decided to implement the value iteration algori
 I first started out by playing the game several times and printing out different properties and output of the various functions to understand how actions, states, rewards and probabilities etc were represented. Additionally, I studied the code that was already in place to familiarise myself before diving into coding a solution - it was a worthwhile endeavour and I noticed several little quirks which may have confused me had I not studied the code first e.g. the states of the game are always sorted in ascending order. 
 
 ### Value Iteration
-After selecting some sensible default values for my discount_factor (𝛾) and theta (θ), aided by the courses Q&A forum discussion (Chinery, 2023) I immediately moved on to trying to translate the value iteration algorithm psuedo code from our course material (Chinery, 2023) and the modules recommended reading into actual code (Russell et al., 2010). The value iteration algorithm presented in the course material is as follows:
+After selecting some sensible default values for my `discount_factor` (𝛾) and `theta` (θ), aided by the courses Q&A forum discussion (Chinery, 2023) I immediately moved on to trying to translate the value iteration algorithm psuedo code from our course material (Chinery, 2023) and the modules recommended reading into actual code (Russell et al., 2010). The value iteration algorithm presented in the course material is as follows:
 
 <p align="center">
   <img src="https://github.com/timothydplatt/AI-Dice-Game/blob/main/Lecture.png" width=50% height=50%>
