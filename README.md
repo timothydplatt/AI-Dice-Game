@@ -25,15 +25,15 @@ As suggested in the assignment I decided to implement the value iteration algori
 I first started out by playing the game several times and printing out different properties and output of the various functions to understand how actions, states, rewards and probabilities etc were represented. Additionally, I studied the code that was already in place to familiarise myself before diving into coding a solution - it was a worthwhile endeavour and I noticed several little quirks which may have confused me had I not studied the code first e.g. the states of the game are always sorted in ascending order. 
 
 ### Value Iteration
-After selecting some sensible default values for my discount_factor (𝛾) and theta (θ)* I immediately moved on to trying to translate the value iteration algorithm psuedo code from our course material** and the modules recommended reading into actual code (Russell et al., 2010). The value iteration algorithm presented in the course material is as follows:
+After selecting some sensible default values for my discount_factor (𝛾) and theta (θ), aided by the courses Q&A forum discussion (Chinery, 2023) I immediately moved on to trying to translate the value iteration algorithm psuedo code from our course material (Chinery, 2023) and the modules recommended reading into actual code (Russell et al., 2010). The value iteration algorithm presented in the course material is as follows:
 
 <p align="center">
   <img src="https://github.com/timothydplatt/AI-Dice-Game/blob/main/Lecture.png" width=50% height=50%>
 </p>
 
-There are numerous ways this code could be implemented. Artificial Intelligence: A Modern Approach*** is quite succict but not particularly readable in my opinion - it's also the only example that uses epsilon versus theta to represent a small value to determine if the algorithm has converged, which is the greek symbol I've traditionally understood to represent a small arbitrary value so it was interesting to see all other texts use theta to represent a small arbitrary value. 
+There are numerous ways this code could be implemented. Artificial Intelligence: A Modern Approaches approach (GitHub, 2023) is quite succict but not particularly readable in my opinion - it's also the only example that uses epsilon versus theta to represent a small value to determine if the algorithm has converged, which is the greek symbol I've traditionally understood to represent a small arbitrary value so it was interesting to see all other texts use theta to represent a small arbitrary value. 
 
-Some techniques break the value iteration algorithm down into multiple functions**** - usually having a sepearate "one-step look-ahead" function, which performs the Bellman update, to break out this quite complex calculation into discrete operations. Typically, I'd find this a more intuitive approach than having several nested loops all within a single function but in the case of value iteration I find keeping the code all in one function more readable and easier to understand what's happening. Equally, the results of the operation are stored in all manner of ways, with some examples storing the the state/values in one dictionary and one state/policy in another dictionary or using Q tables to represent states and rewards in a tabular format*****. 
+Some techniques break the value iteration algorithm down into multiple functions - usually having a sepearate "one-step look-ahead" function, which performs the Bellman update, to break out this quite complex calculation into discrete operations (Tokuç, 2021). Typically, I'd find this a more intuitive approach than having several nested loops all within a single function but in the case of value iteration I find keeping the code all in one function more readable and easier to understand what's happening. Equally, the results of the operation are stored in all manner of ways, with some examples storing the the state/values in one dictionary and one state/policy in another dictionary or using Q tables to represent states and rewards in a tabular format. 
 
 My implementation of the value iteration function, with comments removed, is shown below:
 
@@ -171,10 +171,12 @@ Finally, in terms of performance there are several things I could have perhaps d
 
 ## References
 
+Chinery, A. (2023) 'General Q&A' [Online], Artificial Intelligence. University of Bath. Available at: https://engage.bath.ac.uk/learn/mod/forum/discuss.php?d=72269#p159024 (Accessed: June 2023).
+
+Chinery, A. (2023) 'Dealing with uncertainty' [Online], Artificial Intelligence. University of Bath. Available at: https://engage.bath.ac.uk/learn/mod/forum/discuss.php?d=72269#p159024 (Accessed: June 2023).
+
+GitHub. (2023). aima-python. [Online] Available at: https://github.com/aimacode/aima-python/blob/master/mdp.py [Accessed 28 May. 2023].
+
 Russell, S.J. and Norvig, P. (2010). Artificial intelligence : a modern approach. Upper Saddle River: Prentice-Hall.
 
-* https://engage.bath.ac.uk/learn/mod/forum/discuss.php?d=72269#p159024
-‌** https://engage.bath.ac.uk/learn/mod/page/view.php?id=190322
-*** https://github.com/aimacode/aima-python/blob/master/mdp.py
-**** https://www.baeldung.com/cs/ml-value-iteration-vs-policy-iteration 
-***** https://gibberblot.github.io/rl-notes/single-agent/value-iteration.html
+Tokuç, A.A. (2021). Value Iteration vs. Policy Iteration in Reinforcement Learning | Baeldung on Computer Science. [online] www.baeldung.com. Available at: https://www.baeldung.com/cs/ml-value-iteration-vs-policy-iteration.
