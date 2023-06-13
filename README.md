@@ -100,7 +100,7 @@ Typically a value between 0.9 and 1 is used as the `discount_factor`. A `discoun
 
 `Theta` (θ) represents a small number which is used to check for convergence in the `value_iteration()` function - I initially started with 0.1 as it felt like a negligible difference for a dice game and a sensible starting point when testing out my code as I didn't want it to iterate for a long time each time I ran my Jupyter cells while I was still developing my solution.
 
-In the `parameter_optimisation()` function I created a list of `discount_factor`/`theta` tuples combinations e.g. (0.9, 0.1), (0.9, 0.01) ... (1,1e-10) and then ran the game 50,000 times for each combination of those two parameters. I found that discount factor has a strong positive correlation with increased score (see graph below) but that `theta` values didn't materially impact the scores. 
+In the `parameter_optimisation()` function I created a list of `discount_factor`/`theta` tuples combinations e.g. (0.9, 0.1), (0.9, 0.01) ... (1,1e-10) and then ran the game 50,000 times for each combination of those two parameters. I found that `discount_factor` has a strong positive correlation with increased score (see graph below) but that `theta` values didn't materially impact the scores. 
 
 <p align="center">
   <img src="https://github.com/timothydplatt/AI-Dice-Game/blob/main/Graph 1.png" width=50% height=50%>
