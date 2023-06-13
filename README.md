@@ -33,7 +33,7 @@ After selecting some sensible default values for my discount_factor (𝛾) and t
 
 There are numerous ways this code could be implemented. Artificial Intelligence: A Modern Approaches approach (GitHub, 2023) is quite succict but not particularly readable in my opinion - it's also the only example that uses epsilon versus theta to represent a small value to determine if the algorithm has converged, which is the greek symbol I've traditionally understood to represent a small arbitrary value so it was interesting to see all other texts use theta to represent a small arbitrary value. 
 
-Some techniques break the value iteration algorithm down into multiple functions - usually having a sepearate "one-step look-ahead" function, which performs the Bellman update, to break out this quite complex calculation into discrete operations (Tokuç, 2021). Typically, I'd find this a more intuitive approach than having several nested loops all within a single function but in the case of value iteration I find keeping the code all in one function more readable and easier to understand what's happening. Equally, the results of the operation are stored in all manner of ways, with some examples storing the the state/values in one dictionary and one state/policy in another dictionary or using Q tables to represent states and rewards in a tabular format. 
+Some techniques break the value iteration algorithm down into multiple functions - usually having a separate "one-step look-ahead" function, which performs the Bellman update, to break out this quite complex calculation into discrete operations (Tokuç, 2021). Typically, I'd find this a more intuitive approach than having several nested loops all within a single function but in the case of value iteration I find keeping the code all in one function more readable and easier to understand what's happening. Equally, the results of the operation are stored in all manner of ways, with some examples storing the the state/values in one dictionary and one state/policy in another dictionary or using Q tables to represent states and rewards in a tabular format. 
 
 My implementation of the value iteration function, with comments removed, is shown below:
 
@@ -70,7 +70,7 @@ def value_iteration(self):
         return V
 ```
 
-The variable V is a dictionary where the key is the different states of the game and the value is a list containing an action in index 0 and the expected value of perorming that action for a given state in index 1. I chose the value of the dictionary to be a list as opposed to a tuple because I was expected to be updating the values of the action/value for each state at different times and this wouldn't be possible (or simple) given tuples are immutable. In the end I went on to update the values of the dictionary at the same time so a tuple would have perhaps been a good idea given they're slightly more performant than a list. As mentioned, Q tables can also be used but it didn't feel necessary to import a data collection outside of the standard Python language.
+The variable `V` is a dictionary where the key is the different states of the game and the value is a list containing an action in index 0 and the expected value of perorming that action for a given state in index 1. I chose the value of the dictionary to be a list as opposed to a tuple because I was expected to be updating the values of the action/value for each state at different times and this wouldn't be possible (or simple) given tuples are immutable. In the end I went on to update the values of the dictionary at the same time so a tuple would have perhaps been a good idea given they're slightly more performant than a list. As mentioned, Q tables can also be used but it didn't feel necessary to import a data collection outside of the standard Python language.
 
 The most challenging part of the value function was writing the Bellman update:
 
@@ -82,11 +82,11 @@ for next_state, probability in state_probability_iterable:
       expected_return += probability * reward
 ```
 
-Firstly, it's a complex function to translate from mathematical notation to code - it's important to get the operands and order of operations correct - I managed to create both an infinite loop and a poor scoring agent by getting these wrong and it took some trial and error. Equally, I initially failed to handle when game_over = true which caused issues as there was no 'next-state'. The Bellman update calculates an expected return for an action, given a state, by iterating over all of the possible next states for a given state/action, summing up the probability of taking that action by the the product of the reward for taking the action by the discounted expected return of taking that action. Or simply put, the Bellman update provides the expected return of taking each action from a state which allows us to determine the optimal action for a given state. 
+Firstly, it's a complex function to translate from mathematical notation to code - it's important to get the operands and order of operations correct - I managed to create both an infinite loop and a poor scoring agent by getting these wrong and it took some trial and error. Equally, I initially failed to handle when `game_over` = true which caused issues as there was no 'next-state'. The Bellman update calculates an expected return for an action, given a state, by iterating over all of the possible next states for a given state/action, summing up the probability of taking that action by the the product of the reward for taking the action by the discounted expected return of taking that action. Or simply put, the Bellman update provides the expected return of taking each action from a state which allows us to determine the optimal action for a given state. 
 
-In terms of how the code works - for each state (𝑠) and for each action (a) we calculate an expected return using the Bellman update; as described above. We update our V dictionary wiuth the optimal action and expected value for performing that action for every state. We then repeat this process until the difference (i.e. delta Δ) between the values for each state in V no longer change or they change by such a small amount that they are less than the value of theta (θ) i.e. the convergence threshold. This is described as V having 'converged' and the result is that V should contain the optimal (or good enough) action and value for every state. 
+In terms of how the code works - for each `state` (𝑠) and for each `action` (a) we calculate an `expected_return` using the Bellman update; as described above. We update our `V` dictionary wiuth the optimal action and `expected_value` for performing that `action` for every `state`. We then repeat this process until the difference (i.e. `delta` Δ) between the values for each state in `V` no longer change or they change by such a small amount that they are less than the value of `theta` (θ) i.e. the convergence threshold. This is described as `V` having 'converged' and the result is that `V` should contain the optimal (or good enough) `action` and value for every `state`. 
 
-This means, when an agent is given a state, they can use the action stored in V to perform the optimal action. Which allows us to keep our play() function extremely simple:
+This means, when an agent is given a `state`, they can use the `action` stored in `V` to perform the optimal action. Which allows us to keep our `play()` function extremely simple:
 
 ``` python
 def play(self, state):
@@ -94,25 +94,25 @@ def play(self, state):
 ```
 
 ### Parameter Optimisation
-There are two parameters that needed to be predetermined - the discount_factor (𝛾) and theta (θ).
+There are two parameters that needed to be predetermined - the `discount_factor` (𝛾) and `theta` (θ).
 
-Typically a value between 0.9 and 1 is used as the discount factor. A discount factor of 1 means that rewards in the future are valued just as much as immediate rewards but the higher the discount the more iterations that will be performed before V converges, which means longer processing hence why we measure the time in the parameter_optimisation() function below. Intuitively, even before parameter optimisation, it's reasonable to think that a high value for the discount factor would make sense given each action carries a reward of -1 we need to value future rewards as much as immediate rewards, which is why I initially chose a value of 1 (and in fact, went on to stick with).
+Typically a value between 0.9 and 1 is used as the `discount_factor`. A `discount_factor` of 1 means that rewards in the future are valued just as much as immediate rewards but the higher the discount the more iterations that will be performed before `V` converges, which means longer processing hence why we measure the time in the `parameter_optimisation()` function below. Intuitively, even before parameter optimisation, it's reasonable to think that a high value for the `discount_factor` would make sense given each action carries a reward of -1 we need to value future rewards as much as immediate rewards, which is why I initially chose a value of 1 (and in fact, went on to stick with).
 
-Theta (θ) represents a small number which is used to check for convergence in the value_iteration() function - I initially started with 0.1 as it felt like a negligible difference for a dice game and a sensible starting point when testing out my code as I didn't want it to iterate for a long time each time I ran my Jupyter cells while I was still developing my solution.
+`Theta` (θ) represents a small number which is used to check for convergence in the `value_iteration()` function - I initially started with 0.1 as it felt like a negligible difference for a dice game and a sensible starting point when testing out my code as I didn't want it to iterate for a long time each time I ran my Jupyter cells while I was still developing my solution.
 
-In the parameter_optimisation() function I created a list of discount factor/theta tuples combindations e.g. (0.9, 0.1), (0.9, 0.01) ... (1,1e-10) and then ran the game 50,000 times for each combination of those two parameters. I found that discount factor has a strong positive correlation with increased score (see graph below) but that theta values didn't materially impact the scores. 
+In the `parameter_optimisation()` function I created a list of `discount_factor`/`theta` tuples combinations e.g. (0.9, 0.1), (0.9, 0.01) ... (1,1e-10) and then ran the game 50,000 times for each combination of those two parameters. I found that discount factor has a strong positive correlation with increased score (see graph below) but that `theta` values didn't materially impact the scores. 
 
 <p align="center">
   <img src="https://github.com/timothydplatt/AI-Dice-Game/blob/main/Graph 1.png" width=50% height=50%>
 </p>
 
-Also, I found that lower theta values had a bigger impact on the time taken for the value iteration function to converge than higher discount factor values (see graph below):
+Also, I found that lower `theta` values had a bigger impact on the time taken for the value iteration function to converge than higher `discount_factor` values (see graph below):
 
 <p align="center">
   <img src="https://github.com/timothydplatt/AI-Dice-Game/blob/main/Graph 2.png" width=50% height=50%>
 </p>
 
-Thus, the default values for discount factor and theta are 1 and 0.1 respectively. 
+Thus, the default values for `discount_factor` and `theta` are 1 and 0.1 respectively. 
 
 
 ``` python
@@ -160,7 +160,7 @@ def parameter_optimisation():
 ```
 
 ## Results
-The dice game agent, with a discount factor of 1 and theta value of 0.1, when playing 50,000 games, achieved an average score of 13.33 and was able to complete a game in an average time of 0.0004 seconds. 
+The dice game agent, with a `discount_factor` of 1 and `theta` value of 0.1, when playing 50,000 games, achieved an average score of 13.33 and was able to complete a game in an average time of 0.0004 seconds. 
 
 ## Reflections
 It would have been ideal if I could have implemented a policy iteration solution in addition to value iteration to ascertain that I have indeed indentified the optimal action for every given state. In terms of improvement to the score achieved by the agent, implemented policy iteration may have result in an even higher score or atleast have validated I'd achieved the best possible set of actions and thus scores possible for the agent.
